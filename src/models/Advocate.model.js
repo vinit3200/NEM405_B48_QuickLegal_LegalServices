@@ -7,23 +7,19 @@ let AvailabilitySlotSchema = new Schema({
   endTime: { type: String, required: true }    
 }, { _id: false });
 
-let AdvocateSchema = new Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, unique: true },
-  expertise: [{ type: String, index: true }],
-  practiceAreas: [{ type: String }],
-  languages: [{ type: String }],
+const AdvocateSchema = new Schema({
+  userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
+  expertise: { type: [String], default: [] },
+  practiceAreas: { type: [String], default: [] },
+  languages: { type: [String], default: [] },
   consultationFee: { type: Number, default: 0 },
-  rating: { type: Number, min: 0, max: 5, default: 0 },
-  ratingsCount: { type: Number, default: 0 },
-  availability: [AvailabilitySlotSchema],
+  rating: { type: Number, default: 0 },
+  availability: { type: [AvailabilitySlotSchema], default: [] },
   bio: { type: String, default: '' },
   address: { type: String, default: '' },
   isActive: { type: Boolean, default: true }
-}, {
-  timestamps: true
-});
+}, { timestamps: true });
 
-AdvocateSchema.index({ consultationFee: 1 });
-AdvocateSchema.index({ expertise: 1 });
+AdvocateSchema.index({ expertise: 1 }, { name: 'adv_expertise_idx' });
 
 module.exports = mongoose.model('Advocate', AdvocateSchema);
